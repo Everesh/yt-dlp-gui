@@ -68,18 +68,20 @@ class YTDLPGui:
         playlist = self.playlist.get()
         self.log(f"==> Downloading: {url}\n==> Video: {video_format}\n==> Audio: {audio_format}\n==> Playlist: {playlist}\n")
 
-        command = "yt-dlp -f" # Starts building the yt-dlp command
+        command = "yt-dlp" # Starts building the yt-dlp command
         if video_format != "none":
-            command += " bestvideo+bestaudio"
+            command += " -f bestvideo+bestaudio"
             if video_format != "best":
                 command += f" --recode-video {video_format}"
         else:
-            command += " bestaudio"
+            command += " -x -f bestaudio"
             if audio_format != "best":
-                command += f" --extract-audio --audio-format {audio_format}"
+                command += f" --audio-format {audio_format}"
         if not playlist:
             command += " --no-playlist"
-        command += f" -o \"{self.current_dir.get()}/%(title)s.%(ext)s\" {url}"
+        else:
+            command += " --yes-playlist"
+        command += f" -o \"{self.current_dir.get()}/%(title)s.%(ext)s\" \"{url}\""
 
         self.log(f"=>$ {command}\n")
         process = threading.Thread(target=self.yt_dlp, args=(command,))
