@@ -79,7 +79,7 @@ class YTDLPGui:
                 command += f" --extract-audio --audio-format {audio_format}"
         if not playlist:
             command += " --no-playlist"
-        command += f" -o {self.current_dir} {url}"
+        command += f" -o \"{self.current_dir.get()}/%(title)s.%(ext)s\" {url}"
 
         self.log(f"=>$ {command}\n")
         process = threading.Thread(target=self.yt_dlp, args=(command,))
