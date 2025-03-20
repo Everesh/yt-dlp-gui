@@ -57,7 +57,6 @@ class YTDLPGui:
         self.log(f"==> Downloading: {url}\n==> Video: {video_format}\n==> Audio: {audio_format}\n==> Playlist: {playlist}\n")
 
         command = "yt-dlp -f" # Starts building the yt-dlp command
-
         if video_format != "none":
             command += " bestvideo+bestaudio"
             if video_format != "best":
@@ -66,13 +65,26 @@ class YTDLPGui:
             command += " bestaudio"
             if audio_format != "best":
                 command += f" --extract-audio --audio-format {audio_format}"
-
         if not playlist:
             command += " --no-playlist"
-
         command += f" {url}"
 
-        self.log(command)
+        self.log(f"=>$ {command}\n")
+        process = threading.Thread(target=self.yt_dlp, args=(command,))
+        process.daemon = True
+        process.start()
+
+    def yt_dlp(self, command):
+        """Runs the yt-dlp command."""
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+        while True:
+            output = process.stdout.readline()
+            if output == "" and process.poll() is not None:
+                break
+            if output:
+                self.log(output)
+        process.stdout.close()
+        self.log("\n==> Download complete!\n")
 
     def adjsut_audio_combobox(self):
         """Grays out the audio combobox if the video format is not none."""
