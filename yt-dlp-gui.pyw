@@ -9,7 +9,7 @@ def status_callback(msg):
 
 def yt_dlp(url):
     yt_dlp = subprocess.Popen(
-        ['yt-dlp', '-x', '-f', 'bestaudio', '--no-playlist', '--audio-format', 'mp3', url],
+        ['yt-dlp', '-x', '-f', 'bestaudio', '--no-playlist', '--audio-format', audio_format.get(), url],
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT
     )
 
@@ -30,7 +30,7 @@ def run():
     thread.start()
 
 root = tk.Tk()
-root.title("Inconspicuous bitcoin miner... I mean YT to MP3")
+root.title("yt-dlp gui")
 root.geometry("600x300")
 
 label = tk.Label(root, text="YouTube URL:")
@@ -38,6 +38,12 @@ label.pack(pady=10)
 
 entry = tk.Entry(root, width=80)
 entry.pack(pady=5)
+
+label_audio_format = tk.Label(root, text="Audio format:")
+label_audio_format.pack(pady=10)
+
+audio_format = tk.Entry(root, width=10)
+audio_format.pack(pady=5)
 
 button = tk.Button(root, text="Get MP3", command=run)
 button.pack(pady=20)
