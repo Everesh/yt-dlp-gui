@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import scrolledtext
+from tkinter import filedialog
 from tkinter import ttk
 import subprocess
 import threading
@@ -8,43 +9,54 @@ import os
 
 class YTDLPGui:
     def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("yt-dlp GUI")
-        self.root.geometry("700x400")
+        root = tk.Tk()
+        root.title("yt-dlp GUI")
+        root.geometry("700x400")
 
         # YouTube URL input
-        tk.Label(self.root, text="YouTube URL:").place(x=10, y=10)
-        self.url = tk.Entry(self.root, width=83)
+        tk.Label(root, text="YouTube URL:").place(x=10, y=10)
+        self.url = tk.Entry(root, width=83)
         self.url.place(x=10, y=40)
 
         # Audio format input
-        tk.Label(self.root, text="Audio format:").place(x=10, y=80)
-        self.audio_format = ttk.Combobox(self.root, values=["best", "aac", "flac", "mp3", "m4a", "opus", "vorbis", "wav"], width=10)
+        tk.Label(root, text="Audio format:").place(x=10, y=80)
+        self.audio_format = ttk.Combobox(root, values=["best", "aac", "flac", "mp3", "m4a", "opus", "vorbis", "wav"], width=10)
         self.audio_format.place(x=110, y=80)
         self.audio_format.current(0)
 
         # Video format input
-        tk.Label(self.root, text="Video format:").place(x=250, y=80)
-        self.video_format = ttk.Combobox(self.root, values=["none", "best", "mp4", "webm", "avi", "mkv", "flv"], width=10)
-        self.video_format.place(x=350, y=80)
+        tk.Label(root, text="Video format:").place(x=10, y=120)
+        self.video_format = ttk.Combobox(root, values=["none", "best", "mp4", "webm", "avi", "mkv", "flv"], width=10)
+        self.video_format.place(x=110, y=120)
         self.video_format.current(0)
         self.video_format.bind("<<ComboboxSelected>>", lambda event: self.update_audio_combobox_state())
 
         # PLaylist checkbox
-        tk.Label(self.root, text="Playlist:").place(x=485, y=80)
+        tk.Label(root, text="Playlist:").place(x=265, y=120)
         self.playlist = tk.BooleanVar()
         self.playlist.set(False)
-        tk.Checkbutton(self.root, variable=self.playlist).place(x=535, y=80)
+        tk.Checkbutton(root, variable=self.playlist).place(x=315, y=120)
 
         # Submit button
-        self.submit_button = tk.Button(self.root, text="Submit", command=self.submit)
-        self.submit_button.place(x=605, y=75)
+        submit_button = tk.Button(root, text="Submit", command=self.submit)
+        submit_button.place(x=605, y=115)
+
+        # Output location button
+        change_dir = tk.Button(root, text="Change Output Directory", command=self.select_dir)
+        change_dir.place(x=400, y=115)
+
+        # Current directory
+        tk.Label(root, text="Current Directory:").place(x=265, y=80)
+        self.current_dir = tk.Entry(root, width=34)
+        self.current_dir.place(x=400, y=80)
+        self.current_dir.insert(0, os.getcwd())
+        self.current_dir["state"] = "readonly"
 
         # Status box
-        self.status = scrolledtext.ScrolledText(self.root, wrap=tk.WORD, width=83, height=14)
-        self.status.place(x=10, y=120)
+        self.status = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=83, height=12)
+        self.status.place(x=10, y=160)
 
-        self.root.mainloop()
+        root.mainloop()
 
     def submit(self):
         """Handles the submit button click."""
@@ -67,7 +79,7 @@ class YTDLPGui:
                 command += f" --extract-audio --audio-format {audio_format}"
         if not playlist:
             command += " --no-playlist"
-        command += f" {url}"
+        command += f" -o {self.current_dir} {url}"
 
         self.log(f"=>$ {command}\n")
         process = threading.Thread(target=self.yt_dlp, args=(command,))
@@ -85,6 +97,17 @@ class YTDLPGui:
                 self.log(output)
         process.stdout.close()
         self.log("\n==> Download complete!\n")
+
+    def select_dir(self):
+        """Opens a file dialog to select the output location."""
+        output_dir = filedialog.askdirectory()
+        if output_dir:
+            os.chdir(output_dir)
+            self.current_dir["state"] = "normal"
+            self.current_dir.delete(0, tk.END)
+            self.current_dir.insert(0, output_dir)
+            self.current_dir["state"] = "readonly"
+            self.log(f"==> Output location: {output_dir}\n")
 
     def update_audio_combobox_state(self):
         """Grays out the audio combobox if the video format is not none."""
