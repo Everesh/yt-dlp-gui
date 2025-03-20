@@ -28,7 +28,7 @@ class YTDLPGui:
         self.video_format = ttk.Combobox(self.root, values=["none", "best", "mp4", "webm", "avi", "mkv", "flv"], width=10)
         self.video_format.place(x=350, y=80)
         self.video_format.current(0)
-        self.video_format.bind("<<ComboboxSelected>>", lambda event: self.adjsut_audio_combobox())
+        self.video_format.bind("<<ComboboxSelected>>", lambda event: self.update_audio_combobox_state())
 
         # PLaylist checkbox
         tk.Label(self.root, text="Playlist:").place(x=485, y=80)
@@ -86,7 +86,7 @@ class YTDLPGui:
         process.stdout.close()
         self.log("\n==> Download complete!\n")
 
-    def adjsut_audio_combobox(self):
+    def update_audio_combobox_state(self):
         """Grays out the audio combobox if the video format is not none."""
         if self.video_format.get() == "none":
             self.audio_format["state"] = "normal"
