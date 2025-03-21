@@ -88,7 +88,7 @@ class YTDLPGui:
             command += " --no-playlist"
         else:
             command += " --yes-playlist"
-        command += f" -o \"{self.current_dir.get()}/%(title)s.%(ext)s\" \"{url}\""
+        command += f" -o \"{self.current_dir.get()}{os.sep}%(title)s.%(ext)s\" \"{url}\""
 
         self.log(f"=>$ {command}\n")
         process = threading.Thread(target=self.yt_dlp, args=(command,))
