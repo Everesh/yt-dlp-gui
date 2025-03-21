@@ -61,6 +61,8 @@ class YTDLPGui:
         self.status = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=83, height=12)
         self.status.place(x=10, y=160)
 
+        self.welcome()
+
         root.mainloop()
 
     def submit(self):
@@ -140,6 +142,18 @@ class YTDLPGui:
             return os.path.join(sys._MEIPASS, "yt-dlp")
         else:
             return "yt-dlp" if sys.platform == "linux" else "yt-dlp.exe"
+
+    def welcome(self):
+        self.log("                       __            ____         ________  ______\n")
+        self.log("                __  __/ /_      ____/ / /___     / ____/ / / /  _/\n")
+        self.log("               / / / / __/_____/ __  / / __ \\   / / __/ / / // /  \n")
+        self.log("              / /_/ / /_/_____/ /_/ / / /_/ /  / /_/ / /_/ // /   \n")
+        self.log("              \\__, /\\__/      \\__,_/_/ .___/   \\____/\\____/___/   \n")
+        self.log("             /____/                 /_/                           \n")
+        self.log("\n==|    Options\n")
+        self.log("==|    __best__                   |    Best quality, fastest download\n")
+        self.log("==|    __other_predefined__       |    Incurs additional processing time\n")
+        self.log("==|    __other_not_predefined__   |    Manual dropdown field override possible\n")
 
 if sys.platform == "win32":
     sys.stdout = open(os.devnull, "w")
