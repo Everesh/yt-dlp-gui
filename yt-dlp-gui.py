@@ -147,6 +147,7 @@ class YTDLPGui:
             return "yt-dlp" if sys.platform == "linux" else "yt-dlp.exe"
 
     def welcome(self):
+        """Prints basic instructions to status box."""
         self.log("                       __            ____         ________  ______\n")
         self.log("                __  __/ /_      ____/ / /___     / ____/ / / /  _/\n")
         self.log("               / / / / __/_____/ __  / / __ \\   / / __/ / / // /  \n")
@@ -159,6 +160,7 @@ class YTDLPGui:
         self.log("==|    __other_not_predefined__   |    Manual dropdown field override possible\n")
 
 if sys.platform == "win32":
+    """Suppresses the console window on Windows."""
     sys.stdout = open(os.devnull, "w")
     sys.stderr = open(os.devnull, "w")
 
