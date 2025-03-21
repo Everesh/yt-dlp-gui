@@ -132,14 +132,14 @@ class YTDLPGui:
         if getattr(sys, 'frozen', False):
             return os.path.join(sys._MEIPASS, "ffmpeg")
         else:
-            return "ffmpeg/ffmpeg.linux" if sys.platform == "linux" else "ffmpeg/ffmpeg.exe"
+            return "ffmpeg" if sys.platform == "linux" else "ffmpeg.exe"
 
     def get_yt_dlp_path(self):
         """Returns the path to the yt-dlp binary."""
         if getattr(sys, 'frozen', False):
             return os.path.join(sys._MEIPASS, "yt-dlp")
         else:
-            return "yt-dlp/yt-dlp.linux" if sys.platform == "linux" else "yt-dlp/yt-dlp.exe"
+            return "yt-dlp" if sys.platform == "linux" else "yt-dlp.exe"
 
 if sys.platform == "win32":
     sys.stdout = open(os.devnull, "w")
