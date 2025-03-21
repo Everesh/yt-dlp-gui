@@ -9,6 +9,11 @@ import os
 
 class YTDLPGui:
     def __init__(self):
+        # Add ffmpeg to the PATH
+        self.env = os.environ.copy()
+        self.env['PATH'] = self.get_ffmpeg_path() + os.pathsep + self.env['PATH']
+
+        # Create the GUI
         root = tk.Tk()
         root.title("yt-dlp GUI")
         root.geometry("700x400")
@@ -68,7 +73,7 @@ class YTDLPGui:
         playlist = self.playlist.get()
         self.log(f"==> Downloading: {url}\n==> Video: {video_format}\n==> Audio: {audio_format}\n==> Playlist: {playlist}\n")
 
-        command = "yt-dlp" # Starts building the yt-dlp command
+        command = f"{self.get_yt_dlp_path()}"
         if video_format != "none":
             command += " -f bestvideo+bestaudio"
             if video_format != "best":
@@ -90,7 +95,7 @@ class YTDLPGui:
 
     def yt_dlp(self, command):
         """Runs the yt-dlp command."""
-        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, env=self.env)
         while True:
             output = process.stdout.readline()
             if output == "" and process.poll() is not None:
@@ -104,7 +109,6 @@ class YTDLPGui:
         """Opens a file dialog to select the output location."""
         output_dir = filedialog.askdirectory()
         if output_dir:
-            os.chdir(output_dir)
             self.current_dir["state"] = "normal"
             self.current_dir.delete(0, tk.END)
             self.current_dir.insert(0, output_dir)
@@ -122,6 +126,20 @@ class YTDLPGui:
         """Logs a message to the status box."""
         self.status.insert(tk.END, message)
         self.status.see(tk.END)
+
+    def get_ffmpeg_path(self):
+        """Returns the path to the ffmpeg binary."""
+        if getattr(sys, 'frozen', False):
+            return os.path.join(sys._MEIPASS, "ffmpeg")
+        else:
+            return "ffmpeg/ffmpeg.linux" if sys.platform == "linux" else "ffmpeg/ffmpeg.exe"
+
+    def get_yt_dlp_path(self):
+        """Returns the path to the yt-dlp binary."""
+        if getattr(sys, 'frozen', False):
+            return os.path.join(sys._MEIPASS, "yt-dlp")
+        else:
+            return "yt-dlp/yt-dlp.linux" if sys.platform == "linux" else "yt-dlp/yt-dlp.exe"
 
 if sys.platform == "win32":
     sys.stdout = open(os.devnull, "w")
