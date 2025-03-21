@@ -60,6 +60,7 @@ class YTDLPGui:
         # Status box
         self.status = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=83, height=12)
         self.status.place(x=10, y=160)
+        self.status["state"] = "disabled"
 
         self.welcome()
 
@@ -126,8 +127,10 @@ class YTDLPGui:
 
     def log(self, message):
         """Logs a message to the status box."""
+        self.status["state"] = "normal"
         self.status.insert(tk.END, message)
         self.status.see(tk.END)
+        self.status["state"] = "disabled"
 
     def get_ffmpeg_path(self):
         """Returns the path to the ffmpeg binary."""
