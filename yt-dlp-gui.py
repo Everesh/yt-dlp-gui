@@ -16,50 +16,60 @@ class YTDLPGui:
         # Create the GUI
         root = tk.Tk()
         root.title("yt-dlp GUI")
-        root.geometry("700x400")
+        root.geometry("800x500")
+
+        # Set the grid layout
+        root.grid_rowconfigure(0, weight=1, minsize=50)
+        root.grid_rowconfigure(1, weight=1, minsize=50)
+        root.grid_rowconfigure(2, weight=1, minsize=50)
+        root.grid_rowconfigure(3, weight=15, minsize=50)
+
+        root.grid_columnconfigure(1, weight=1, minsize=80)
+        root.grid_columnconfigure(4, weight=5, minsize=200)
+        root.grid_columnconfigure(5, weight=5, minsize=100)
 
         # YouTube URL input
-        tk.Label(root, text="YouTube URL:").place(x=10, y=10)
-        self.url = tk.Entry(root, width=83)
-        self.url.place(x=10, y=40)
+        tk.Label(root, text="YouTube URL:").grid(column=0, row=0, padx=10, pady=10)
+        self.url = tk.Entry(root)
+        self.url.grid(column=1, row=0, columnspan=5, sticky="nsew", padx=10, pady=10)
 
         # Audio format input
-        tk.Label(root, text="Audio format:").place(x=10, y=80)
+        tk.Label(root, text="Audio format:").grid(column=0, row=1, padx=10, pady=10)
         self.audio_format = ttk.Combobox(root, values=["best", "aac", "flac", "mp3", "m4a", "opus", "vorbis", "wav"], width=10)
-        self.audio_format.place(x=110, y=80)
+        self.audio_format.grid(column=1, row=1, sticky="nsew", padx=10, pady=10)
         self.audio_format.current(0)
 
         # Video format input
-        tk.Label(root, text="Video format:").place(x=10, y=120)
+        tk.Label(root, text="Video format:").grid(column=0, row=2, padx=10, pady=10)
         self.video_format = ttk.Combobox(root, values=["none", "best", "mp4", "webm", "avi", "mkv", "flv"], width=10)
-        self.video_format.place(x=110, y=120)
+        self.video_format.grid(column=1, row=2, sticky="nsew", padx=10, pady=10)
         self.video_format.current(0)
         self.video_format.bind("<<ComboboxSelected>>", lambda event: self.update_audio_combobox_state())
 
         # PLaylist checkbox
-        tk.Label(root, text="Playlist:").place(x=265, y=120)
+        tk.Label(root, text="Playlist:").grid(column=2, row=2, padx=10, pady=10)
         self.playlist = tk.BooleanVar()
         self.playlist.set(False)
-        tk.Checkbutton(root, variable=self.playlist).place(x=315, y=120)
+        tk.Checkbutton(root, variable=self.playlist).grid(column=3, row=2, padx=10, pady=10)
 
         # Submit button
         submit_button = tk.Button(root, text="Submit", command=self.submit)
-        submit_button.place(x=605, y=115)
+        submit_button.grid(column=5, row=2, sticky="nsew", padx=10, pady=10)
 
         # Output location button
         change_dir = tk.Button(root, text="Change Output Directory", command=self.select_dir)
-        change_dir.place(x=400, y=115)
+        change_dir.grid(column=4, row=2, sticky="nsew", padx=10, pady=10)
 
         # Current directory
-        tk.Label(root, text="Current Directory:").place(x=265, y=80)
-        self.current_dir = tk.Entry(root, width=34)
-        self.current_dir.place(x=400, y=80)
+        tk.Label(root, text="Current Directory:").grid(column=2, row=1, padx=10, pady=10)
+        self.current_dir = tk.Entry(root)
+        self.current_dir.grid(column=3, row=1, columnspan=3, sticky="nswe", padx=10, pady=10)
         self.current_dir.insert(0, os.getcwd())
         self.current_dir["state"] = "readonly"
 
         # Status box
-        self.status = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=83, height=12)
-        self.status.place(x=10, y=160)
+        self.status = scrolledtext.ScrolledText(root, wrap=tk.WORD)
+        self.status.grid(column=0, row=3, columnspan=6, sticky="nsew", padx=10, pady=10)
         self.status["state"] = "disabled"
 
         self.welcome()
