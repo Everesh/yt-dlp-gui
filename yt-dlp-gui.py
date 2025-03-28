@@ -19,10 +19,10 @@ class YTDLPGui:
         root.geometry("800x500")
 
         # Set the grid layout
-        root.grid_rowconfigure(0, weight=1, minsize=50)
-        root.grid_rowconfigure(1, weight=1, minsize=50)
-        root.grid_rowconfigure(2, weight=1, minsize=50)
-        root.grid_rowconfigure(3, weight=15, minsize=50)
+        root.grid_rowconfigure(0, weight=1, minsize=55)
+        root.grid_rowconfigure(1, weight=1, minsize=55)
+        root.grid_rowconfigure(2, weight=1, minsize=55)
+        root.grid_rowconfigure(3, weight=15, minsize=100)
 
         root.grid_columnconfigure(1, weight=1, minsize=80)
         root.grid_columnconfigure(4, weight=5, minsize=200)
