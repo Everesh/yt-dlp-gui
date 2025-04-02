@@ -18,6 +18,9 @@ class YTDLPGui:
         root.title("yt-dlp GUI")
         root.geometry("800x500")
 
+        style = ttk.Style()
+        style.theme_use("clam")
+
         # Set the grid layout
         root.grid_rowconfigure(0, weight=1, minsize=55)
         root.grid_rowconfigure(1, weight=1, minsize=55)
@@ -29,40 +32,40 @@ class YTDLPGui:
         root.grid_columnconfigure(5, weight=5, minsize=100)
 
         # YouTube URL input
-        tk.Label(root, text="YouTube URL:").grid(column=0, row=0, padx=10, pady=10)
-        self.url = tk.Entry(root)
+        ttk.Label(root, text="YouTube URL:").grid(column=0, row=0, padx=10, pady=10)
+        self.url = ttk.Entry(root)
         self.url.grid(column=1, row=0, columnspan=5, sticky="nsew", padx=10, pady=10)
 
         # Audio format input
-        tk.Label(root, text="Audio format:").grid(column=0, row=1, padx=10, pady=10)
+        ttk.Label(root, text="Audio format:").grid(column=0, row=1, padx=10, pady=10)
         self.audio_format = ttk.Combobox(root, values=["best", "aac", "flac", "mp3", "m4a", "opus", "vorbis", "wav"], width=10)
         self.audio_format.grid(column=1, row=1, sticky="nsew", padx=10, pady=10)
         self.audio_format.current(0)
 
         # Video format input
-        tk.Label(root, text="Video format:").grid(column=0, row=2, padx=10, pady=10)
+        ttk.Label(root, text="Video format:").grid(column=0, row=2, padx=10, pady=10)
         self.video_format = ttk.Combobox(root, values=["none", "best", "mp4", "webm", "avi", "mkv", "flv"], width=10)
         self.video_format.grid(column=1, row=2, sticky="nsew", padx=10, pady=10)
         self.video_format.current(0)
         self.video_format.bind("<<ComboboxSelected>>", lambda event: self.update_audio_combobox_state())
 
         # PLaylist checkbox
-        tk.Label(root, text="Playlist:").grid(column=2, row=2, padx=10, pady=10)
+        ttk.Label(root, text="Playlist:").grid(column=2, row=2, padx=10, pady=10)
         self.playlist = tk.BooleanVar()
         self.playlist.set(False)
-        tk.Checkbutton(root, variable=self.playlist).grid(column=3, row=2, padx=10, pady=10)
+        ttk.Checkbutton(root, variable=self.playlist).grid(column=3, row=2, padx=10, pady=10)
 
         # Submit button
-        submit_button = tk.Button(root, text="Submit", command=self.submit)
+        submit_button = ttk.Button(root, text="Submit", command=self.submit)
         submit_button.grid(column=5, row=2, sticky="nsew", padx=10, pady=10)
 
         # Output location button
-        change_dir = tk.Button(root, text="Change Output Directory", command=self.select_dir)
+        change_dir = ttk.Button(root, text="Change Output Directory", command=self.select_dir)
         change_dir.grid(column=4, row=2, sticky="nsew", padx=10, pady=10)
 
         # Current directory
-        tk.Label(root, text="Current Directory:").grid(column=2, row=1, padx=10, pady=10)
-        self.current_dir = tk.Entry(root)
+        ttk.Label(root, text="Current Directory:").grid(column=2, row=1, padx=10, pady=10)
+        self.current_dir = ttk.Entry(root)
         self.current_dir.grid(column=3, row=1, columnspan=3, sticky="nswe", padx=10, pady=10)
         self.current_dir.insert(0, os.getcwd())
         self.current_dir["state"] = "readonly"
