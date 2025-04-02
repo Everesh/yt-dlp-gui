@@ -41,6 +41,7 @@ class YTDLPGui:
         self.audio_format = ttk.Combobox(root, values=["best", "aac", "flac", "mp3", "m4a", "opus", "vorbis", "wav"], width=10)
         self.audio_format.grid(column=1, row=1, sticky="nsew", padx=10, pady=10)
         self.audio_format.current(0)
+        self.audio_format.bind("<<ComboboxSelected>>", lambda event: self.audio_format.select_clear())
 
         # Video format input
         ttk.Label(root, text="Video format:").grid(column=0, row=2, padx=10, pady=10)
@@ -139,6 +140,7 @@ class YTDLPGui:
         else:
             self.audio_format.set("---")
             self.audio_format["state"] = "disabled"
+        self.video_format.select_clear()
 
     def log(self, message):
         """Logs a message to the status box."""
