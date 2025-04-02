@@ -44,7 +44,7 @@ class YTDLPGui:
 
         # Video format input
         ttk.Label(root, text="Video format:").grid(column=0, row=2, padx=10, pady=10)
-        self.video_format = ttk.Combobox(root, values=["none", "best", "mp4", "webm", "avi", "mkv", "flv"], width=10)
+        self.video_format = ttk.Combobox(root, values=["---", "best", "mp4", "webm", "avi", "mkv", "flv"], width=10)
         self.video_format.grid(column=1, row=2, sticky="nsew", padx=10, pady=10)
         self.video_format.current(0)
         self.video_format.bind("<<ComboboxSelected>>", lambda event: self.update_audio_combobox_state())
@@ -90,7 +90,7 @@ class YTDLPGui:
         self.log(f"==> Downloading: {url}\n==> Video: {video_format}\n==> Audio: {audio_format}\n==> Playlist: {playlist}\n")
 
         command = f"{self.get_yt_dlp_path()}"
-        if video_format != "none":
+        if video_format != "---":
             command += " -f bestvideo+bestaudio"
             if video_format != "best":
                 command += f" --recode-video {video_format}"
@@ -132,10 +132,12 @@ class YTDLPGui:
             self.log(f"==> Output location: {output_dir}\n")
 
     def update_audio_combobox_state(self):
-        """Grays out the audio combobox if the video format is not none."""
-        if self.video_format.get() == "none":
+        """Grays out the audio combobox if the video format is not ---."""
+        if self.video_format.get() == "---":
             self.audio_format["state"] = "normal"
+            self.audio_format.current(0)
         else:
+            self.audio_format.set("---")
             self.audio_format["state"] = "disabled"
 
     def log(self, message):
